@@ -10,12 +10,19 @@ import './App.css'
 
 class BooksApp extends Component {
     state = {
-        myBooks: []
+        myBooks: [],
+        searchResults: []
     }
 
     componentDidMount() {
         BooksAPI.getAll().then((books) => {
             this.setState({ myBooks: books })
+        })
+    }
+
+    searchBooks = (query) => {
+        BooksAPI.search(query).then((books) => {
+            this.setState({ searchResults: books })
         })
     }
 
@@ -33,8 +40,13 @@ class BooksApp extends Component {
                     />
                 )} />
 
-                <Route path="/search" render={() => (
-                    <SearchPage />
+                <Route path="/search" render={( { history } ) => (
+                    <SearchPage
+                        changeUrl={(input) => {
+                            history.push(`/search/${input}`)
+                        }}
+                        searchBooks={this.searchBooks}
+                    />
                 )} />
 
 
