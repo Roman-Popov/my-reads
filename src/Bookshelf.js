@@ -12,7 +12,13 @@ class Bookshelf extends Component {
                 <div className="bookshelf-books">
                     <ol className="books-grid">
                         {books
-                            .filter(book => book.shelf === shelf)
+                            .filter(book => {
+                                if (book.shelf && shelf) {
+                                    return book.shelf === shelf
+                                } else {
+                                    return book
+                                }
+                            })
                             .map(book => (
                                 <li key={book.id}>
                                     <Book

@@ -22,12 +22,16 @@ class BooksApp extends Component {
 
     searchBooks = (query) => {
         BooksAPI.search(query).then((books) => {
-            this.setState({ searchResults: books })
-        })
+            if (books.error) {
+                this.setState({ searchResults: [] })
+            } else {
+                this.setState({ searchResults: books })
+            }
+        }).catch(() => this.setState({ searchResults: [] }))
     }
 
     render() {
-        const { myBooks } = this.state;
+        const { myBooks, searchResults } = this.state;
 
 
         return (
@@ -46,6 +50,8 @@ class BooksApp extends Component {
                             history.push(`/search/${input}`)
                         }}
                         searchBooks={this.searchBooks}
+                        myBooks={myBooks}
+                        searchResults={searchResults}
                     />
                 )} />
 
