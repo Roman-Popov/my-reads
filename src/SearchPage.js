@@ -32,7 +32,7 @@ class SearchPage extends Component {
     updateQuery = (query) => {
         clearTimeout(this.state.timer);
         const timer = setTimeout(() => {
-            this.props.changeUrl(this.state.query);
+            this.props.changeUrl(this.state.query.trim());
         }, 500);
         this.setState({ query: query, timer: timer })
     }
@@ -50,10 +50,10 @@ class SearchPage extends Component {
     }
 
     render() {
-        const { query } = this.state;
+        const { query, lastURL } = this.state;
         const { myBooks, searchResults } = this.props;
 
-        const relatedMyBooks = this.filterBooks(query, myBooks);
+        const relatedMyBooks = this.filterBooks(lastURL.trim(), myBooks);
 
         return (
             <div className="search-books">
