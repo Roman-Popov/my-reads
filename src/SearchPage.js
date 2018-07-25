@@ -50,15 +50,15 @@ class SearchPage extends Component {
     }
 
     render() {
-        const { query, lastURL } = this.state;
-        const { myBooks, searchResults } = this.props;
+        const { query } = this.state;
+        const { myBooks, searchBooks, searchResults, changeShelf } = this.props;
 
-        const relatedMyBooks = this.filterBooks(lastURL.trim(), myBooks);
+        const relatedMyBooks = this.filterBooks(query.trim(), myBooks);
 
         return (
             <div className="search-books">
                 <div className="search-books-bar">
-                    <Link className="close-search" to="/">Close</Link>
+                    <Link className="close-search" to="/" onClick={() => searchBooks()}>Close</Link>
                     <div className="search-books-input-wrapper">
                         <input
                             type="text"
@@ -68,14 +68,15 @@ class SearchPage extends Component {
                         />
                     </div>
                 </div>
-                <div className="search-books-results">
-                    <ol className="books-grid">
+                <div className="search-books-results list-books">
+                    <div>
                         {(relatedMyBooks.length > 0) &&
                         <Bookshelf
                             section="My Books"
                             books={relatedMyBooks}
+                            changeShelf={changeShelf}
                         />}
-                    </ol>
+                    </div>
 
                     <ol className="books-grid">
                         {(searchResults.length > 0) &&
@@ -83,6 +84,7 @@ class SearchPage extends Component {
                             section="Search Results"
                             shelf="searchResults"
                             books={searchResults}
+                            changeShelf={changeShelf}
                         />}
                     </ol>
                 </div>

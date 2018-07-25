@@ -56,9 +56,10 @@ body, .app {
 }
 
 .open-search {
-    position: sticky;
+    position: fixed;
     height: 50px;
     width: 100%;
+    max-width: inherit;
     bottom: 25px;
 }
 .open-search a {
@@ -178,6 +179,16 @@ body, .app {
     height: 100%;
     opacity: 0;
     cursor: pointer;
+}
+
+.book-shelf-changer select option:first-child {
+    background: #2e7c31;
+    color: white;
+    font-weight: bold;
+}
+
+.book-shelf-changer select option:nth-child(2) {
+    font-weight: bold;
 }
 
 /* book cover */

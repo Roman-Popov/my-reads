@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 
+import ShelfChanger from './ShelfChanger'
+
 class Book extends Component {
     render() {
-        const { book } = this.props;
+        const { book, changeShelf } = this.props;
 
         return (
             <div className="book">
@@ -11,15 +13,11 @@ class Book extends Component {
                         className={`book-cover ${!book.imageLinks && 'no-thumbnail'}`}
                         style={{ width: 128, height: 193, backgroundImage: book.imageLinks && `url("${( book.imageLinks.thumbnail) }")` }}>
                     </div>
-                    <div className="book-shelf-changer">
-                        <select>
-                            <option value="move" disabled>Move to...</option>
-                            <option value="currentlyReading">Currently Reading</option>
-                            <option value="wantToRead">Want to Read</option>
-                            <option value="read">Read</option>
-                            <option value="none">None</option>
-                        </select>
-                    </div>
+                    <ShelfChanger
+                        book={book}
+                        currentShelf={book.shelf}
+                        changeShelf={changeShelf}
+                    />
                 </div>
                 <div className="book-title">{book.title}</div>
                 <div className="book-authors">{book.authors && book.authors.join(', ')}</div>

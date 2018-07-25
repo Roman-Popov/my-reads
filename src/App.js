@@ -15,9 +15,7 @@ class BooksApp extends Component {
     }
 
     componentDidMount() {
-        BooksAPI.getAll().then((books) => {
-            this.setState({ myBooks: books })
-        })
+        this.loadMyBooks();
     }
 
     searchBooks = (query) => {
@@ -34,9 +32,18 @@ class BooksApp extends Component {
         }
     }
 
+    loadMyBooks() {
+        BooksAPI.getAll().then((books) => {
+            this.setState({ myBooks: books })
+        })
+    }
+
+    changeShelf = (book, shelf) => {
+        BooksAPI.update(book, shelf).then(()=> this.loadMyBooks())
+    }
+
     render() {
         const { myBooks, searchResults } = this.state;
-
 
         return (
             <div className="app">
@@ -45,6 +52,7 @@ class BooksApp extends Component {
                 <Route exact path="/" render={() => (
                     <MainPage
                         books={myBooks}
+                        changeShelf={this.changeShelf}
                     />
                 )} />
 
@@ -56,10 +64,9 @@ class BooksApp extends Component {
                         searchBooks={this.searchBooks}
                         myBooks={myBooks}
                         searchResults={searchResults}
+                        changeShelf={this.changeShelf}
                     />
                 )} />
-
-
             </div>
         )
     }
