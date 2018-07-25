@@ -11,36 +11,50 @@ class SearchPage extends Component {
         lastURL: '',
     }
 
-    getCurrentURL() {
-        return document.URL.substr(document.URL.indexOf('search') + 7).replace('%20', ' ')
+
+    componentDidUpdate() {
+        const { query, lastURL } = this.state;
+        const currentURL = this.getCurrentURL()
+        // If search URL has been changed
+        if (currentURL !== lastURL) {
+            // Search for new books
+            this.props.searchBooks(currentURL);
+
+            const searchInput = (query.trim() !== lastURL) ? query : currentURL;
+            this.setState({ lastURL: currentURL, query: searchInput })
+        }
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        // Need in case of navigation back and forth by browser buttons
-        if (this.getCurrentURL() !== this.state.lastURL) {
-            this.setState({ lastURL: this.getCurrentURL() })
-            return
-        }
-        if (this.state.lastURL !== prevState.lastURL) {
-            this.props.searchBooks(this.state.lastURL)
-            this.setState({ query: this.state.lastURL })
-        }
+    getCurrentURL() {
+        return decodeURI(document.URL.substr(document.URL.indexOf('search') + 7))
     }
 
     updateQuery = (query) => {
         clearTimeout(this.state.timer);
         const timer = setTimeout(() => {
             this.props.changeUrl(this.state.query);
-        }, 1000);
-        this.setState({ query: query, timer: timer, })
+        }, 500);
+        this.setState({ query: query, timer: timer })
+    }
+
+    filterBooks(query, books) {
+        return query ? books.filter(book =>
+                            book.title
+                                .toLowerCase()
+                                .indexOf(query.toLowerCase().trim()) !== -1 ||
+                            book.authors
+                                .join(' ')
+                                .toLowerCase()
+                                .indexOf(query.toLowerCase().trim()) !== -1
+                        ) : [];
     }
 
     render() {
         const { query } = this.state;
         const { myBooks, searchResults } = this.props;
 
-        const filteredMyBooks = query ? myBooks.filter(book => book.title.toLowerCase().indexOf(query.toLowerCase()) !== -1 ||
-                                                               book.authors.join(' ').toLowerCase().indexOf(query.toLowerCase()) !== -1) : [];
+        const relatedMyBooks = this.filterBooks(query, myBooks);
+
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -56,10 +70,10 @@ class SearchPage extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        {(filteredMyBooks.length > 0) &&
+                        {(relatedMyBooks.length > 0) &&
                         <Bookshelf
                             section="My Books"
-                            books={filteredMyBooks}
+                            books={relatedMyBooks}
                         />}
                     </ol>
 

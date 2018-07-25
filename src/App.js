@@ -21,13 +21,17 @@ class BooksApp extends Component {
     }
 
     searchBooks = (query) => {
-        BooksAPI.search(query).then((books) => {
-            if (books.error) {
-                this.setState({ searchResults: [] })
-            } else {
-                this.setState({ searchResults: books })
-            }
-        }).catch(() => this.setState({ searchResults: [] }))
+        if (query) {
+            BooksAPI.search(query).then((books) => {
+                if (books.error) {
+                    this.setState({ searchResults: [] })
+                } else {
+                    this.setState({ searchResults: books })
+                }
+            }).catch(() => this.setState({ searchResults: [] }))
+        } else {
+            this.setState({ searchResults: [] })
+        }
     }
 
     render() {
