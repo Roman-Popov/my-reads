@@ -187,7 +187,8 @@ body, .app {
     font-weight: bold;
 }
 
-.book-shelf-changer select option:nth-child(2) {
+option:checked {
+    background: rgba(144, 238, 144, 0.5);
     font-weight: bold;
 }
 
